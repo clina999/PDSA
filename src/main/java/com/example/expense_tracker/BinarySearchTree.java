@@ -98,4 +98,23 @@ public class BinarySearchTree {
     private int countExpenses(Category cat) {
         return LinkedList.count(cat.expensesHead);
     }
+
+    // Sort expenses in a category in-place using the linked-list sort helpers.
+    // sortBy: "name" or "amount" (defaults to name). order: "asc" or "desc" (defaults to asc).
+    public String sortExpenses(String categoryName, String sortBy, String order) {
+        Category cat = searchCategoryRec(root, categoryName);
+        if (cat == null) {
+            return "Category not found: " + categoryName;
+        }
+        if (cat.expensesHead == null) return "No expenses for category: " + categoryName;
+
+        boolean asc = !"desc".equalsIgnoreCase(order);
+        if ("amount".equalsIgnoreCase(sortBy)) {
+            cat.expensesHead = LinkedList.sortByAmount(cat.expensesHead, asc);
+        } else {
+            cat.expensesHead = LinkedList.sortByName(cat.expensesHead, asc);
+        }
+
+        return LinkedList.listToString(cat.expensesHead);
+    }
 }
