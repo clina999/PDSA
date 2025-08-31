@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.expense_tracker.BinarySearchTree;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3001")
 @RestController
 @RequestMapping("/api")
 public class ExpenseController {
@@ -45,12 +45,21 @@ public class ExpenseController {
 
     @GetMapping("/categories/expenses/list")
     public String listExpensesInCategory(@RequestParam String categoryName) {
-        return bst.listExpenses(categoryName);
+    return bst.listExpenses(categoryName);
     }
 
     @DeleteMapping("/categories/expenses/delete")
     public String deleteExpenseInCategory(@RequestParam String categoryName,
                                           @RequestParam String expenseName) {
         return bst.deleteExpense(categoryName, expenseName);
+    }
+
+    // Sort expenses in a category (in-place) and return the sorted list.
+    // Query params: categoryName (required), sortBy=name|amount (optional), order=asc|desc (optional)
+    @PostMapping("/categories/expenses/sort")
+    public String sortExpensesInCategory(@RequestParam String categoryName,
+                                         @RequestParam(required = false, defaultValue = "amount") String sortBy,
+                                         @RequestParam(required = false, defaultValue = "asc") String order) {
+        return bst.sortExpenses(categoryName, sortBy, order);
     }
 }
