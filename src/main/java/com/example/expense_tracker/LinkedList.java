@@ -1,5 +1,7 @@
 package com.example.expense_tracker;
 
+import java.util.Comparator;
+
 // Public helper utilities for Expense linked lists
 public class LinkedList {
 
@@ -58,5 +60,44 @@ public class LinkedList {
             cur = cur.next;
         }
         return head;
+    }
+
+    // Sort a singly-linked list of Expense using insertion sort and a Comparator.
+    // Returns the new head of the sorted list. Comparator defines ascending order.
+    static Expense sort(Expense head, Comparator<Expense> cmp) {
+        if (head == null || head.next == null) return head;
+        Expense sorted = null;
+    Expense cur = head;
+        while (cur != null) {
+            Expense next = cur.next;
+            // insert cur into sorted list at correct position
+            if (sorted == null || cmp.compare(cur, sorted) < 0) {
+                cur.next = sorted;
+                sorted = cur;
+            } else {
+                Expense p = sorted;
+                while (p.next != null && cmp.compare(p.next, cur) <= 0) {
+                    p = p.next;
+                }
+                cur.next = p.next;
+                p.next = cur;
+            }
+            cur = next;
+        }
+        return sorted;
+    }
+    
+    // Convenience: sort by name ascending or descending
+    static Expense sortByName(Expense head, boolean ascending) {
+        Comparator<Expense> cmp = (a, b) -> a.name == null ? (b.name == null ? 0 : -1) : a.name.compareTo(b.name);
+        if (!ascending) cmp = cmp.reversed();
+        return sort(head, cmp);
+    }
+
+    // Convenience: sort by amount ascending or descending
+    static Expense sortByAmount(Expense head, boolean ascending) {
+        Comparator<Expense> cmp = (a, b) -> Double.compare(a.amount, b.amount);
+        if (!ascending) cmp = cmp.reversed();
+        return sort(head, cmp);
     }
 }
